@@ -8,8 +8,22 @@ const app = express();
 
 app.use(cors());
 
-app.get('/api/v1/search/:song', (req, res) => {
-	res.send({message: req.params.song});
+app.get('/api/v1', (req, res) => {
+	res.json({message: 'Hello World 🌎'});
+})
+
+app.get('/api/v1/search/:song', async (req, res) => {
+	if (!config.token) {
+		await getToken();
+	}
+
+	const songs = await axios.get(`https://api.spotify.com/v1/search?q=${req.params.song}`, {
+		headers: {
+			'Authorization': `Bearer ${config.token}`,
+		}
+	});
+
+	res.json(songs);
 });
 
 const getToken = async () => {
