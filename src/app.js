@@ -1,14 +1,18 @@
 require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
+const config = require('./config');
+const cors = require('cors');
 
 const app = express();
 
-app.get('/api/v1/search', (req, res) => {
-	res.send({message: 'Song to search for'});
+app.use(cors());
+
+app.get('/api/v1/search/:song', (req, res) => {
+	res.send({message: req.params.song});
 });
 
-function getToken = async () => {
+const getToken = async () => {
 	const {data} = await axios.post("https://accounts.spotify.com/api/token",
 		`grant_type=client_credentials&client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`,
 		{
@@ -17,7 +21,7 @@ function getToken = async () => {
 			}
 		});
 
-	return data["access_token"];
+	config.token = data["access_token"];
 }
 
 app.listen(8080 , () => {
