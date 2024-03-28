@@ -1,12 +1,13 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, Express } from 'express';
 import 'dotenv/config';
+import logger from './utils/logger';
 
-const app = express();
+const app: Express = express();
 
 app.get('/', (req: Request, res: Response) => {
   res.json('Hello world');
 });
 
 app.listen(process.env.PORT, () => {
-  console.log('App listening on port 3000');
+  logger.info(`App is connected on port ${process.env.PORT}`);
 });
